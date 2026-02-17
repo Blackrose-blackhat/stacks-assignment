@@ -1,0 +1,431 @@
+"use client";
+
+import * as React from "react";
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+  getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
+} from "@tanstack/react-table";
+import {
+  ArrowUpDown,
+  MoreHorizontal,
+  Search,
+  Inbox,
+  ChevronLeft,
+  ChevronRight,
+  Filter,
+} from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+
+// --- Mock Data ---
+export type Transaction = {
+  id: string;
+  amount: number;
+  status: "paid" | "pending" | "failed";
+  merchant: string;
+  category: string;
+  date: string;
+};
+
+const mockTransactions: Transaction[] = [
+  {
+    id: "1",
+    amount: 250.0,
+    status: "paid",
+    merchant: "Apple Store",
+    category: "Technology",
+    date: "2024-02-15",
+  },
+  {
+    id: "2",
+    amount: 45.5,
+    status: "paid",
+    merchant: "Starbucks",
+    category: "Food & Drink",
+    date: "2024-02-14",
+  },
+  {
+    id: "3",
+    amount: 1200.0,
+    status: "pending",
+    merchant: "Landlord Corp",
+    category: "Rent",
+    date: "2024-02-13",
+  },
+  {
+    id: "4",
+    amount: 89.99,
+    status: "paid",
+    merchant: "Amazon",
+    category: "Shopping",
+    date: "2024-02-12",
+  },
+  {
+    id: "5",
+    amount: 15.0,
+    status: "failed",
+    merchant: "Netflix",
+    category: "Entertainment",
+    date: "2024-02-11",
+  },
+  {
+    id: "6",
+    amount: 65.2,
+    status: "paid",
+    merchant: "Chevron",
+    category: "Transport",
+    date: "2024-02-10",
+  },
+  {
+    id: "7",
+    amount: 320.0,
+    status: "paid",
+    merchant: "Nike",
+    category: "Shopping",
+    date: "2024-02-09",
+  },
+  {
+    id: "8",
+    amount: 22.0,
+    status: "paid",
+    merchant: "Uber",
+    category: "Transport",
+    date: "2024-02-08",
+  },
+  {
+    id: "9",
+    amount: 55.0,
+    status: "pending",
+    merchant: "Whole Foods",
+    category: "Groceries",
+    date: "2024-02-07",
+  },
+  {
+    id: "10",
+    amount: 12.5,
+    status: "paid",
+    merchant: "App Store",
+    category: "Entertainment",
+    date: "2024-02-06",
+  },
+  {
+    id: "11",
+    amount: 300.0,
+    status: "paid",
+    merchant: "Home Depot",
+    category: "Home",
+    date: "2024-02-05",
+  },
+  {
+    id: "12",
+    amount: 40.0,
+    status: "paid",
+    merchant: "Lyft",
+    category: "Transport",
+    date: "2024-02-04",
+  },
+];
+
+// --- Empty State Component ---
+function EmptyState() {
+  return (
+    <div className="flex flex-col items-center justify-center py-20 text-center space-y-4 animate-in fade-in zoom-in duration-500">
+      <div className="bg-muted/50 p-6 rounded-full">
+        <Inbox className="h-12 w-12 text-muted-foreground opacity-50" />
+      </div>
+      <div className="space-y-2">
+        <h3 className="text-xl font-semibold">No transactions found</h3>
+        <p className="text-muted-foreground max-w-[300px]">
+          It looks like you haven't made any transactions yet. Start tracking
+          your spending by adding a new one.
+        </p>
+      </div>
+      <Button className="rounded-full px-8">Add Transaction</Button>
+    </div>
+  );
+}
+
+// --- Columns ---
+const columns: ColumnDef<Transaction>[] = [
+  {
+    accessorKey: "merchant",
+    header: "Merchant",
+    cell: ({ row }) => (
+      <div className="flex flex-col">
+        <span className="font-semibold ">{row.getValue("merchant")}</span>
+        <span className="text-xs text-muted-foreground">
+          {row.original.category}
+        </span>
+      </div>
+    ),
+  },
+  {
+    accessorKey: "date",
+    header: "Date",
+    cell: ({ row }) => (
+      <div className="text-muted-foreground">{row.getValue("date")}</div>
+    ),
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => {
+      const status = row.getValue("status") as string;
+      return (
+        <Badge
+          variant="secondary"
+          className={cn(
+            "rounded-full px-3 py-1 font-medium capitalize border-none",
+            status === "paid" && "bg-emerald-500/10 text-emerald-600",
+            status === "pending" && "bg-amber-500/10 text-amber-600",
+            status === "failed" && "bg-rose-500/10 text-rose-600",
+          )}
+        >
+          {status}
+        </Badge>
+      );
+    },
+  },
+  {
+    accessorKey: "amount",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-transparent p-0 font-medium"
+        >
+          Amount
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("amount"));
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(amount);
+
+      return <div className="text-right font-bold text-lg">{formatted}</div>;
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="h-8 w-8 p-0 hover:bg-muted rounded-full"
+            >
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="rounded-xl border-border">
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(row.original.id)}
+            >
+              Copy transaction ID
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>View details</DropdownMenuItem>
+            <DropdownMenuItem className="text-destructive focus:text-destructive">
+              Delete transaction
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+];
+
+export function TransactionList() {
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [filterValue, setFilterValue] = React.useState("");
+
+  const data = React.useMemo(() => {
+    if (!filterValue) return mockTransactions;
+    return mockTransactions.filter(
+      (t) =>
+        t.merchant.toLowerCase().includes(filterValue.toLowerCase()) ||
+        t.category.toLowerCase().includes(filterValue.toLowerCase()),
+    );
+  }, [filterValue]);
+
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    state: {
+      sorting,
+    },
+  });
+
+  return (
+    <Card className="border-none shadow-md bg-card rounded-3xl overflow-hidden">
+      <CardHeader>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <CardTitle className="text-2xl">Recent Transactions</CardTitle>
+            <CardDescription>
+              A list of your last {data.length} activities.
+            </CardDescription>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search transactions..."
+                value={filterValue}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setFilterValue(e.target.value)
+                }
+                className="pl-9 w-full md:w-[250px] bg-muted/30 border-muted-foreground/20 rounded-xl focus:ring-primary/20"
+              />
+            </div>
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-xl border-muted-foreground/20"
+            >
+              <Filter className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {data.length === 0 ? (
+          <EmptyState />
+        ) : (
+          <div className="space-y-4">
+            <div className="rounded-2xl border border-muted/30 overflow-hidden">
+              <Table>
+                <TableHeader className="bg-accent">
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow
+                      key={headerGroup.id}
+                      className="hover:bg-transparent border-muted/30"
+                    >
+                      {headerGroup.headers.map((header) => {
+                        return (
+                          <TableHead
+                            key={header.id}
+                            className={cn(
+                              "px-6 py-4 font-semibold text-foreground/80",
+                              header.id === "amount" && "text-right",
+                            )}
+                          >
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext(),
+                                )}
+                          </TableHead>
+                        );
+                      })}
+                    </TableRow>
+                  ))}
+                </TableHeader>
+                <TableBody>
+                  {table.getRowModel().rows?.length ? (
+                    table.getRowModel().rows.map((row) => (
+                      <TableRow
+                        key={row.id}
+                        data-state={row.getIsSelected() && "selected"}
+                        className="hover:bg-muted/30 transition-colors border-muted/20"
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell key={cell.id} className="px-6 py-4">
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length}
+                        className="h-24 text-center"
+                      >
+                        No results.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Pagination */}
+            <div className="flex items-center justify-between px-2 py-4">
+              <p className="text-sm text-muted-foreground">
+                Showing {table.getPaginationRowModel().rows.length} of{" "}
+                {data.length} transactions
+              </p>
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => table.previousPage()}
+                  disabled={!table.getCanPreviousPage()}
+                  className="rounded-lg gap-1 border-muted/30"
+                >
+                  <ChevronLeft className="h-4 w-4" /> Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => table.nextPage()}
+                  disabled={!table.getCanNextPage()}
+                  className="rounded-lg gap-1 border-muted/30"
+                >
+                  Next <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
