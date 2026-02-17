@@ -228,7 +228,7 @@ export function Navbar() {
                     Equinox
                   </SheetTitle>
                 </SheetHeader>
-                <div className="flex flex-col gap-4 py-8 ">
+                <div className="flex flex-col gap-4 py-8 px-3 ">
                   {navItems.map((item) => (
                     <Link
                       key={item.name}
@@ -242,26 +242,6 @@ export function Navbar() {
                       {item.name}
                     </Link>
                   ))}
-                  <div className="mt-4 pt-4 border-t">
-                    <Button
-                      className="w-full justify-start gap-2"
-                      variant="ghost"
-                    >
-                      <User className="h-4 w-4" /> Profile
-                    </Button>
-                    <Button
-                      className="w-full justify-start gap-2"
-                      variant="ghost"
-                    >
-                      <Settings className="h-4 w-4" /> Settings
-                    </Button>
-                    <Button
-                      className="w-full justify-start gap-2 text-destructive hover:text-destructive hover:bg-destructive/10"
-                      variant="ghost"
-                    >
-                      <LogOut className="h-4 w-4" /> Log out
-                    </Button>
-                  </div>
                 </div>
               </SheetContent>
             </Sheet>
