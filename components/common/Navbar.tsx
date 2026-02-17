@@ -13,6 +13,7 @@ import {
   Moon,
   Monitor,
   Palette,
+  Plus,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
@@ -22,7 +23,6 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import {
   DropdownMenu,
@@ -60,20 +60,69 @@ export function Navbar() {
   }, []);
 
   if (!mounted) {
-    return null; // Or a skeleton/placeholder
+    return null;
   }
+
+  const openAddTransaction = () => {
+    const event = new KeyboardEvent("keydown", {
+      key: "k",
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+    document.dispatchEvent(event);
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full mx-auto border-b bg-background ">
       <div className="container mx-auto max-w-7xl flex h-16 items-center justify-between px-4">
         {/* Logo and Brand */}
         <div className="flex items-center gap-2">
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="bg-primary/10 p-2 rounded-lg">
-              <Scale className="h-6 w-6 text-primary" />
+          <Link href="/" className="flex items-center space-x-2 group">
+            <div className="bg-primary/10 p-2 rounded-xl transition-all hover:bg-primary/15">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="text-primary"
+              >
+                <rect
+                  width="24"
+                  height="24"
+                  rx="6"
+                  fill="currentColor"
+                  fillOpacity="0.1"
+                />
+                <rect
+                  x="5"
+                  y="7"
+                  width="14"
+                  height="1.5"
+                  rx="0.75"
+                  fill="currentColor"
+                />
+                <rect
+                  x="5"
+                  y="11.5"
+                  width="10"
+                  height="2.5"
+                  rx="1.25"
+                  fill="currentColor"
+                />
+                <rect
+                  x="7"
+                  y="17"
+                  width="12"
+                  height="1.5"
+                  rx="0.75"
+                  fill="currentColor"
+                />
+              </svg>
             </div>
-            <span className="hidden font-bold sm:inline-block text-xl tracking-tight">
-              Equinox
+            <span className="hidden font-medium sm:inline-block text-xl tracking-tight text-foreground/90 lowercase">
+              equifi
             </span>
           </Link>
         </div>
@@ -84,14 +133,13 @@ export function Navbar() {
             <NavigationMenuList className="gap-2">
               {navItems.map((item) => (
                 <NavigationMenuItem key={item.name}>
-                  <Link href={item.href} passHref legacyBehavior>
+                  <Link href={item.href} passHref>
                     <NavigationMenuLink
                       className={cn(
-                        "relative px-1 py-2 text-sm font-medium transition-colors hover:text-primary",
-                        "after:content-[''] after:absolute after:inset-x-0 after:bottom-0.5 after:h-0.5 after:bg-primary after:transition-transform after:duration-300 after:origin-left",
+                        "px-3 py-1.5 text-sm transition-all hover:bg-transparent focus:bg-transparent data-[active=true]:bg-transparent data-[active=true]:hover:bg-transparent data-[active=true]:focus:bg-transparent",
                         pathname === item.href
-                          ? "text-primary after:scale-x-100"
-                          : "text-muted-foreground after:scale-x-0 hover:after:scale-x-100",
+                          ? "text-primary font-semibold"
+                          : "text-muted-foreground hover:text-foreground",
                       )}
                     >
                       {item.name}
@@ -109,14 +157,14 @@ export function Navbar() {
             <Button
               variant="ghost"
               size="icon"
-              className="text-muted-foreground"
+              className="text-muted-foreground hover:bg-transparent"
             >
               <Search className="h-5 w-5" />
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              className="text-muted-foreground"
+              className="text-muted-foreground hover:bg-transparent"
             >
               <Bell className="h-5 w-5" />
             </Button>
@@ -126,7 +174,7 @@ export function Navbar() {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="relative h-10 w-10 rounded-full border border-border p-0 overflow-hidden hover:bg-muted transition-all duration-200"
+                className="relative h-10 w-10 rounded-full border border-border p-0 overflow-hidden transition-all duration-200 hover:bg-transparent"
               >
                 <Avatar className="h-10 w-10">
                   <AvatarImage
@@ -217,15 +265,60 @@ export function Navbar() {
           <div className="md:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="hover:bg-muted">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="hover:bg-transparent"
+                >
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                 <SheetHeader>
                   <SheetTitle className="text-left flex items-center gap-2">
-                    <Scale className="h-6 w-6 text-primary" />
-                    Equinox
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="text-primary"
+                    >
+                      <rect
+                        width="24"
+                        height="24"
+                        rx="6"
+                        fill="currentColor"
+                        fillOpacity="0.1"
+                      />
+                      <rect
+                        x="5"
+                        y="7"
+                        width="14"
+                        height="1.5"
+                        rx="0.75"
+                        fill="currentColor"
+                      />
+                      <rect
+                        x="5"
+                        y="11.5"
+                        width="10"
+                        height="2.5"
+                        rx="1.25"
+                        fill="currentColor"
+                      />
+                      <rect
+                        x="7"
+                        y="17"
+                        width="12"
+                        height="1.5"
+                        rx="0.75"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    <span className="lowercase font-medium tracking-tight">
+                      equifi
+                    </span>
                   </SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col gap-4 py-8 px-3 ">
@@ -234,9 +327,10 @@ export function Navbar() {
                       key={item.name}
                       href={item.href}
                       className={cn(
-                        "text-lg font-medium transition-colors hover:text-primary px-4 py-2 rounded-md hover:bg-muted",
-                        pathname === item.href &&
-                          "bg-accent text-accent-foreground",
+                        "text-lg transition-colors px-4 py-2 hover:bg-transparent",
+                        pathname === item.href
+                          ? "text-primary font-semibold"
+                          : "text-muted-foreground hover:text-foreground",
                       )}
                     >
                       {item.name}

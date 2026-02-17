@@ -1,26 +1,15 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  TrendingUp,
-  TrendingDown,
-  Wallet,
-  CreditCard,
-  PiggyBank,
-  ArrowUpRight,
-  ArrowDownRight,
-} from "lucide-react";
+import { TrendingUp, TrendingDown, Wallet, PiggyBank } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTransactions } from "@/hooks/use-transactions";
 
 interface OverviewCardProps {
   title: string;
   value: string;
   description: string;
   icon: React.ReactNode;
-  trend?: {
-    value: string;
-    isPositive: boolean;
-  };
   variant?: "default" | "success" | "destructive" | "warning";
 }
 
@@ -29,23 +18,10 @@ function OverviewCard({
   value,
   description,
   icon,
-  trend,
   variant = "default",
 }: OverviewCardProps) {
   return (
-    <Card
-      className={cn(
-        "relative overflow-hidden border-none shadow-md backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group",
-        variant === "success" &&
-          "bg-gradient-to-br from-emerald-500/10 via-card to-card",
-        variant === "destructive" &&
-          "bg-gradient-to-br from-rose-500/10 via-card to-card",
-        variant === "warning" &&
-          "bg-gradient-to-br from-amber-500/10 via-card to-card",
-        variant === "default" &&
-          "bg-gradient-to-br from-primary/10 via-card to-card",
-      )}
-    >
+    <Card className="relative overflow-hidden transition-all duration-300 group hover:border-muted-foreground/30">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground">
           {title}
@@ -64,61 +40,61 @@ function OverviewCard({
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold tracking-tight">{value}</div>
-        <div className="flex items-center gap-2 mt-1">
-          {trend && (
-            <div
-              className={cn(
-                "flex items-center text-xs font-medium",
-                trend.isPositive ? "text-emerald-500" : "text-rose-500",
-              )}
-            >
-              {trend.isPositive ? (
-                <ArrowUpRight className="h-3 w-3 mr-0.5" />
-              ) : (
-                <ArrowDownRight className="h-3 w-3 mr-0.5" />
-              )}
-              {trend.value}
-            </div>
-          )}
-          <p className="text-xs text-muted-foreground">{description}</p>
-        </div>
+        <p className="text-xs text-muted-foreground mt-1">{description}</p>
       </CardContent>
     </Card>
   );
 }
 
 export function OverviewCards() {
+  const { transactions } = useTransactions();
+
+  const totalIncome = transactions
+    .filter((tx) => tx.type === "income")
+    .reduce((acc, tx) => acc + tx.amount, 0);
+
+  const totalExpenses = transactions
+    .filter((tx) => tx.type === "expense")
+    .reduce((acc, tx) => acc + tx.amount, 0);
+
+  const netBalance = totalIncome - totalExpenses;
+  const savingsRate =
+    totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome) * 100 : 0;
+
+  const formatCurrency = (val: number) =>
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(val);
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <OverviewCard
         title="Total Income"
-        value="$12,450.00"
-        description="from last month"
+        value={formatCurrency(totalIncome)}
+        description="Lifetime earnings"
         icon={<TrendingUp className="h-5 w-5" />}
-        trend={{ value: "12%", isPositive: true }}
         variant="success"
       />
       <OverviewCard
         title="Total Expenses"
-        value="$4,280.50"
-        description="from last month"
+        value={formatCurrency(totalExpenses)}
+        description="Lifetime spending"
         icon={<TrendingDown className="h-5 w-5" />}
-        trend={{ value: "8%", isPositive: false }}
         variant="destructive"
       />
       <OverviewCard
         title="Net Balance"
-        value="$8,169.50"
-        description="Available now"
+        value={formatCurrency(netBalance)}
+        description="Available capital"
         icon={<Wallet className="h-5 w-5" />}
         variant="default"
       />
       <OverviewCard
         title="Savings Rate"
-        value="65.6%"
+        value={`${savingsRate.toFixed(1)}%`}
         description="of total income"
         icon={<PiggyBank className="h-5 w-5" />}
-        trend={{ value: "2.4%", isPositive: true }}
         variant="warning"
       />
     </div>

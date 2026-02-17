@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import {
   Area,
   AreaChart,
@@ -20,16 +21,10 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
 } from "@/components/ui/chart";
-
-const chartData = [
-  { month: "January", income: 2500, expenses: 1800 },
-  { month: "February", income: 3200, expenses: 2100 },
-  { month: "March", income: 2800, expenses: 2400 },
-  { month: "April", income: 4500, expenses: 2800 },
-  { month: "May", income: 3800, expenses: 2200 },
-  { month: "June", income: 5200, expenses: 3100 },
-];
+import { useTransactions } from "@/hooks/use-transactions";
 
 const chartConfig = {
   income: {
@@ -43,18 +38,62 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function IncomeExpenseChart() {
+  const { transactions } = useTransactions();
+
+  const chartData = React.useMemo(() => {
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    // Initialize last 6 months
+    const data: Record<
+      string,
+      { month: string; income: number; expenses: number; sortKey: number }
+    > = {};
+    const now = new Date();
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const m = months[d.getMonth()];
+      const key = `${m} ${d.getFullYear()}`;
+      data[key] = { month: m, income: 0, expenses: 0, sortKey: d.getTime() };
+    }
+
+    transactions.forEach((t) => {
+      const d = new Date(t.date);
+      const m = months[d.getMonth()];
+      const key = `${m} ${d.getFullYear()}`;
+      if (data[key]) {
+        if (t.type === "income") data[key].income += t.amount;
+        else data[key].expenses += t.amount;
+      }
+    });
+
+    return Object.values(data).sort((a, b) => a.sortKey - b.sortKey);
+  }, [transactions]);
+
   return (
-    <Card className="col-span-1 md:col-span-4 border-none shadow-md bg-card rounded-3xl overflow-hidden">
+    <Card className="col-span-1 md:col-span-8 bg-card rounded-3xl overflow-hidden h-full flex flex-col">
       <CardHeader>
         <CardTitle className="text-xl">Cash Flow</CardTitle>
         <CardDescription>
-          Monthly comparison of your income and expenses for the last 6 months.
+          Comparison of your income and expenses for the last 6 months.
         </CardDescription>
       </CardHeader>
-      <CardContent className="px-2 sm:px-6">
+      <CardContent className="px-2 sm:px-6 flex-grow">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[350px] w-full"
+          className="aspect-auto h-[350px] min-h-[350px] w-full"
         >
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
@@ -102,7 +141,6 @@ export function IncomeExpenseChart() {
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8}
-                tickFormatter={(value) => value.slice(0, 3)}
                 className="text-muted-foreground text-xs"
               />
               <YAxis
@@ -116,21 +154,22 @@ export function IncomeExpenseChart() {
                 cursor={false}
                 content={<ChartTooltipContent indicator="dot" />}
               />
+              <ChartLegend content={<ChartLegendContent />} />
               <Area
                 dataKey="expenses"
-                type="natural"
+                type="monotone"
                 fill="url(#fillExpenses)"
                 stroke="var(--secondary)"
                 strokeWidth={2}
-                stackId="a"
+                activeDot={{ r: 4 }}
               />
               <Area
                 dataKey="income"
-                type="natural"
+                type="monotone"
                 fill="url(#fillIncome)"
                 stroke="var(--primary)"
                 strokeWidth={2}
-                stackId="a"
+                activeDot={{ r: 4 }}
               />
             </AreaChart>
           </ResponsiveContainer>

@@ -1,3 +1,5 @@
+"use client";
+
 import { OverviewCards } from "@/components/dashboard/OverviewCards";
 import { IncomeExpenseChart } from "@/components/dashboard/IncomeExpenseChart";
 import { TransactionList } from "@/components/dashboard/TransactionList";
@@ -28,8 +30,25 @@ export default function Home() {
             <Download className="mr-2 h-4 w-4" /> Export
           </Button>
 
-          <Button className="rounded-full px-6 shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all duration-300">
-            <Plus className="mr-2 h-4 w-4" /> Add Transaction
+          <Button
+            variant="default"
+            size="sm"
+            className="hidden  lg:flex items-center gap-2 rounded-xl   transition-all text-xs font-medium pr-1.5 h-9"
+            onClick={() => {
+              const event = new KeyboardEvent("keydown", {
+                key: "k",
+                ctrlKey: true,
+                bubbles: true,
+                cancelable: true,
+              });
+              document.dispatchEvent(event);
+            }}
+          >
+            <Plus className="h-3.5 w-3.5" />
+            Add Transaction
+            <kbd className="pointer-events-none ml-1 inline-flex h-5 select-none items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100">
+              <span className="text-xs">⌘</span>K
+            </kbd>
           </Button>
         </div>
       </div>
@@ -40,7 +59,7 @@ export default function Home() {
       </section>
 
       {/* Main Charts and Breakdown Section */}
-      <div className="grid gap-8 md:grid-cols-7">
+      <div className="grid gap-8 md:grid-cols-12 items-stretch">
         <IncomeExpenseChart />
         <CategoryBreakdown />
       </div>

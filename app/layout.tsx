@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/common/Navbar";
 import { ThemeProvider } from "@/components/theme-provider";
+import { TransactionProvider } from "@/hooks/use-transactions";
+import { CommandMenu } from "@/components/common/CommandMenu";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,27 +18,27 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Equinox",
-    template: "%s | Equinox",
+    default: "equifi",
+    template: "%s | equifi",
   },
   description:
-    "Financial equilibrium and emotional stability for the modern saver. Track your expenses and income with premium clarity.",
+    "Financial management made simple for the modern saver. Track your expenses and income with premium clarity and effortless organization.",
   icons: {
     icon: "/icon.svg",
     apple: "/icon.svg",
   },
   openGraph: {
-    title: "Equinox - Financial Stability",
+    title: "equifi - Effortless Finance",
     description:
-      "Track your expenses and income with premium clarity and emotional balance.",
+      "Track your expenses and income with premium clarity and organized financial ledgers.",
     type: "website",
     locale: "en_US",
-    siteName: "Equinox",
+    siteName: "equifi",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Equinox",
-    description: "Financial equilibrium for the modern saver.",
+    title: "equifi",
+    description: "Financial management for the modern saver.",
   },
 };
 
@@ -56,10 +58,13 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="relative flex min-h-screen flex-col">
-            <Navbar />
-            <main className="flex-1">{children}</main>
-          </div>
+          <TransactionProvider>
+            <div className="relative flex min-h-screen flex-col">
+              <Navbar />
+              <main className="flex-1">{children}</main>
+            </div>
+            <CommandMenu />
+          </TransactionProvider>
         </ThemeProvider>
       </body>
     </html>
