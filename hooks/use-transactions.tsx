@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import {
   Transaction,
   getStoredTransactions,
@@ -22,11 +22,9 @@ export function TransactionProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-
-  useEffect(() => {
-    setTransactions(getStoredTransactions());
-  }, []);
+  const [transactions, setTransactions] = useState<Transaction[]>(() =>
+    getStoredTransactions(),
+  );
 
   const addTransaction = (newTx: Omit<Transaction, "id" | "date">) => {
     const transaction: Transaction = {

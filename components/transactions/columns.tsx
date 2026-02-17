@@ -152,7 +152,7 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row }) => {
+    cell: ({ row, table }) => {
       const transaction = row.original;
 
       return (
@@ -185,9 +185,7 @@ export const columns: ColumnDef<Transaction>[] = [
               // Note: deleteTransaction needs to be passed via meta or similar if defined here
               // For now, we'll implement the table to receive meta.
               onClick={() =>
-                (row.table.options.meta as any)?.deleteTransaction(
-                  transaction.id,
-                )
+                (table.options.meta as any)?.deleteTransaction(transaction.id)
               }
             >
               <Trash2 className="mr-2 h-4 w-4" />

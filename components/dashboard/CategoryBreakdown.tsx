@@ -137,15 +137,17 @@ export function CategoryBreakdown() {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={categoryData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius="75%"
-                  outerRadius="95%"
-                  paddingAngle={5}
-                  dataKey="value"
-                  nameKey="name"
-                  activeIndex={activeIndex}
+                  {...({
+                    data: categoryData,
+                    cx: "50%",
+                    cy: "50%",
+                    innerRadius: "75%",
+                    outerRadius: "95%",
+                    paddingAngle: 5,
+                    dataKey: "value",
+                    nameKey: "name",
+                    activeIndex: activeIndex,
+                  } as any)}
                   activeShape={(props: any) => {
                     const {
                       cx,
