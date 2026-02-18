@@ -12,7 +12,7 @@ export default function TransactionsPage() {
   const openAddTransaction = () => {
     const event = new KeyboardEvent("keydown", {
       key: "k",
-      ctrlKey: true,
+      metaKey: true,
       bubbles: true,
       cancelable: true,
     });
@@ -20,7 +20,7 @@ export default function TransactionsPage() {
   };
 
   return (
-    <main className="container mx-auto max-w-7xl py-12 px-4 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="container mx-auto max-w-7xl py-12 px-4 space-y-10 animate-in">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-4xl font-bold tracking-tight">Transactions</h1>
@@ -31,14 +31,17 @@ export default function TransactionsPage() {
         <div className="flex items-center gap-3">
           <Button
             variant="outline"
-            className="rounded-xl border-muted-foreground/20 gap-2"
+            className="rounded-xl border-muted-foreground/20 gap-2 h-10"
           >
             <Download className="h-4 w-4" />
             Export CSV
           </Button>
-          <Button className="rounded-xl gap-2 " onClick={openAddTransaction}>
-            <Plus className="h-4 w-4" />
-            New Transaction
+          <Button
+            className="rounded-xl flex items-center gap-2 h-10 px-3 lg:pr-1.5"
+            onClick={openAddTransaction}
+          >
+            <Plus className="h-4 w-4 lg:h-3.5 lg:w-3.5" />
+            <span className="hidden lg:inline">New Transaction</span>
           </Button>
         </div>
       </div>
@@ -48,6 +51,6 @@ export default function TransactionsPage() {
         data={transactions}
         meta={{ deleteTransaction }}
       />
-    </main>
+    </div>
   );
 }

@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -56,17 +57,22 @@ export function AddTransactionDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px] bg-background">
-        <DialogHeader>
-          <DialogTitle>Add Transaction</DialogTitle>
+      <DialogContent className="w-full max-w-[calc(100%-2rem)] sm:max-w-[425px] bg-background rounded-3xl border-muted/20 p-6">
+        <DialogHeader className="mb-4 text-left">
+          <DialogTitle className="text-2xl font-semibold tracking-tight">
+            Add Transaction
+          </DialogTitle>
+          <DialogDescription className="text-muted-foreground">
+            Enter the details of your new transaction below.
+          </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 py-4">
-          <div className="flex p-1 bg-muted rounded-xl mb-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="flex p-1 bg-muted/50 rounded-2xl mb-2">
             <button
               type="button"
               onClick={() => setFormData({ ...formData, type: "expense" })}
               className={cn(
-                "flex-1 py-1.5 text-xs font-medium rounded-lg transition-all",
+                "flex-1 py-2 text-sm font-medium rounded-xl transition-all duration-200",
                 formData.type === "expense"
                   ? "bg-background text-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground",
@@ -78,7 +84,7 @@ export function AddTransactionDialog({
               type="button"
               onClick={() => setFormData({ ...formData, type: "income" })}
               className={cn(
-                "flex-1 py-1.5 text-xs font-medium rounded-lg transition-all",
+                "flex-1 py-2 text-sm font-medium rounded-xl transition-all duration-200",
                 formData.type === "income"
                   ? "bg-background text-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground",
@@ -87,46 +93,76 @@ export function AddTransactionDialog({
               Income
             </button>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="merchant">Merchant</Label>
-            <Input
-              id="merchant"
-              placeholder="Apple Store, Starbucks..."
-              value={formData.merchant}
-              onChange={(e) =>
-                setFormData({ ...formData, merchant: e.target.value })
-              }
-              required
-            />
+
+          <div className="grid gap-5">
+            <div className="space-y-2">
+              <Label htmlFor="merchant" className="text-sm font-medium ml-1">
+                Merchant
+              </Label>
+              <Input
+                id="merchant"
+                name="merchant"
+                placeholder="Apple Store, Starbucks..."
+                value={formData.merchant}
+                onChange={(e) =>
+                  setFormData({ ...formData, merchant: e.target.value })
+                }
+                className="h-11 rounded-xl bg-muted/30 border-muted/20 focus:bg-background transition-all"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="amount" className="text-sm font-medium ml-1">
+                  Amount
+                </Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                    $
+                  </span>
+                  <Input
+                    id="amount"
+                    name="amount"
+                    type="number"
+                    step="0.01"
+                    placeholder="0.00"
+                    value={formData.amount}
+                    onChange={(e) =>
+                      setFormData({ ...formData, amount: e.target.value })
+                    }
+                    className="h-11 pl-7 rounded-xl bg-muted/30 border-muted/20 focus:bg-background transition-all"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="category" className="text-sm font-medium ml-1">
+                  Category
+                </Label>
+                <Input
+                  id="category"
+                  name="category"
+                  placeholder="Technology..."
+                  value={formData.category}
+                  onChange={(e) =>
+                    setFormData({ ...formData, category: e.target.value })
+                  }
+                  className="h-11 rounded-xl bg-muted/30 border-muted/20 focus:bg-background transition-all"
+                  required
+                />
+              </div>
+            </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="amount">Amount</Label>
-            <Input
-              id="amount"
-              type="number"
-              step="0.01"
-              placeholder="0.00"
-              value={formData.amount}
-              onChange={(e) =>
-                setFormData({ ...formData, amount: e.target.value })
-              }
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="category">Category</Label>
-            <Input
-              id="category"
-              placeholder="Technology, Food, Rent..."
-              value={formData.category}
-              onChange={(e) =>
-                setFormData({ ...formData, category: e.target.value })
-              }
-              required
-            />
-          </div>
-          <DialogFooter>
-            <Button type="submit">Save Transaction</Button>
+
+          <DialogFooter className="pt-4 sm:pt-2">
+            <Button
+              type="submit"
+              className="w-full sm:w-auto rounded-xl h-11 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-medium transition-all shadow-sm"
+            >
+              Save Transaction
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

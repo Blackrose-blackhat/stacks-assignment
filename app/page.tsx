@@ -9,14 +9,14 @@ import { Plus, Download } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="container mx-auto py-8 px-4 space-y-10 max-w-7xl animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="container mx-auto py-12 px-4 space-y-10 max-w-7xl animate-in">
       {/* Dashboard Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-4xl font-bold tracking-tight">
             Financial Overview
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-lg text-muted-foreground mt-1">
             Track income, expenses, and balance trends across your recent
             activity.
           </p>
@@ -25,7 +25,7 @@ export default function Home() {
         <div className="flex items-center gap-3">
           <Button
             variant="outline"
-            className="rounded-full px-6 border-muted-foreground/20 hover:bg-muted/50"
+            className="rounded-xl px-6 border-muted-foreground/20 hover:bg-muted/50 h-10"
           >
             <Download className="mr-2 h-4 w-4" /> Export
           </Button>
@@ -33,20 +33,20 @@ export default function Home() {
           <Button
             variant="default"
             size="sm"
-            className="hidden  lg:flex items-center gap-2 rounded-xl   transition-all text-xs font-medium pr-1.5 h-9"
+            className="flex items-center gap-2 rounded-xl transition-all text-xs font-medium h-10 px-3 lg:pr-1.5"
             onClick={() => {
               const event = new KeyboardEvent("keydown", {
                 key: "k",
-                ctrlKey: true,
+                metaKey: true,
                 bubbles: true,
                 cancelable: true,
               });
               document.dispatchEvent(event);
             }}
           >
-            <Plus className="h-3.5 w-3.5" />
-            Add Transaction
-            <kbd className="pointer-events-none ml-1 inline-flex h-5 select-none items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100">
+            <Plus className="h-4 w-4 lg:h-3.5 lg:w-3.5" />
+            <span className="hidden lg:inline">Add Transaction</span>
+            <kbd className="pointer-events-none ml-1 hidden lg:inline-flex h-5 select-none items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100">
               <span className="text-xs">⌘</span>K
             </kbd>
           </Button>

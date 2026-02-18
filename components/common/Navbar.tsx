@@ -39,6 +39,7 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
+  SheetDescription,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
@@ -66,7 +67,7 @@ export function Navbar() {
   const openAddTransaction = () => {
     const event = new KeyboardEvent("keydown", {
       key: "k",
-      ctrlKey: true,
+      metaKey: true,
       bubbles: true,
       cancelable: true,
     });
@@ -133,8 +134,9 @@ export function Navbar() {
             <NavigationMenuList className="gap-2">
               {navItems.map((item) => (
                 <NavigationMenuItem key={item.name}>
-                  <Link href={item.href} passHref>
-                    <NavigationMenuLink
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href={item.href}
                       className={cn(
                         "px-3 py-1.5 text-sm transition-all hover:bg-transparent focus:bg-transparent data-[active=true]:bg-transparent data-[active=true]:hover:bg-transparent data-[active=true]:focus:bg-transparent",
                         pathname === item.href
@@ -143,8 +145,8 @@ export function Navbar() {
                       )}
                     >
                       {item.name}
-                    </NavigationMenuLink>
-                  </Link>
+                    </Link>
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>
@@ -153,6 +155,17 @@ export function Navbar() {
 
         {/* Right Section: Toolbar and User Profile */}
         <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 lg:hidden">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-primary hover:bg-primary/10 transition-colors"
+              onClick={openAddTransaction}
+            >
+              <Plus className="h-6 w-6" />
+            </Button>
+          </div>
+
           <div className="hidden sm:flex items-center gap-2 mr-2">
             <Button
               variant="ghost"
@@ -320,6 +333,9 @@ export function Navbar() {
                       equifi
                     </span>
                   </SheetTitle>
+                  <SheetDescription className="sr-only">
+                    Navigation menu for mobile devices.
+                  </SheetDescription>
                 </SheetHeader>
                 <div className="flex flex-col gap-4 py-8 px-3 ">
                   {navItems.map((item) => (
