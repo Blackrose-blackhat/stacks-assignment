@@ -54,7 +54,7 @@ const categoryColors: Record<string, string> = {
 };
 
 export function CategoryBreakdown() {
-  const { transactions } = useTransactions();
+  const { transactions, isHydrated } = useTransactions();
   const [activeIndex, setActiveIndex] = React.useState(-1);
   const [showLabel, setShowLabel] = React.useState(false);
 
@@ -111,9 +111,38 @@ export function CategoryBreakdown() {
     };
   }, [categoryData]);
 
+  // Skeleton while loading
+  if (!isHydrated) {
+    return (
+      <Card className="col-span-1 md:col-span-4 bg-input/10 rounded-3xl overflow-hidden h-full flex flex-col">
+        <CardHeader>
+          <div className="h-6 w-28 bg-muted/50 rounded animate-pulse" />
+          <div className="h-4 w-40 bg-muted/30 rounded animate-pulse mt-1" />
+        </CardHeader>
+        <CardContent className="flex-grow flex flex-col items-center justify-center gap-6 pt-0">
+          <div className="w-[200px] h-[200px] rounded-full bg-muted/30 animate-pulse" />
+          <div className="w-full space-y-4 pt-4 border-t border-muted/20">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="h-8 w-8 bg-muted/40 rounded-lg animate-pulse" />
+                  <div className="space-y-1">
+                    <div className="h-3.5 w-20 bg-muted/40 rounded animate-pulse" />
+                    <div className="h-2.5 w-10 bg-muted/30 rounded animate-pulse" />
+                  </div>
+                </div>
+                <div className="h-4 w-14 bg-muted/40 rounded animate-pulse" />
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   if (categoryData.length === 0) {
     return (
-      <Card className="col-span-1 md:col-span-4 bg-card rounded-3xl overflow-hidden">
+      <Card className="col-span-1 md:col-span-4 bg-input/10 rounded-3xl overflow-hidden">
         <CardHeader>
           <CardTitle className="text-xl">Categories</CardTitle>
           <CardDescription>No expense data to display.</CardDescription>
@@ -126,7 +155,7 @@ export function CategoryBreakdown() {
   }
 
   return (
-    <Card className="col-span-1 md:col-span-4 bg-card rounded-3xl overflow-hidden h-full flex flex-col">
+    <Card className="col-span-1 md:col-span-4 bg-input/10 rounded-3xl overflow-hidden h-full flex flex-col">
       <CardHeader>
         <CardTitle className="text-xl">Categories</CardTitle>
         <CardDescription>Highest spending areas.</CardDescription>

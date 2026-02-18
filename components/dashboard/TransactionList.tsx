@@ -85,7 +85,7 @@ function EmptyState() {
 }
 
 export function TransactionList() {
-  const { transactions, deleteTransaction } = useTransactions();
+  const { transactions, deleteTransaction, isHydrated } = useTransactions();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [filterValue, setFilterValue] = React.useState("");
 
@@ -235,8 +235,54 @@ export function TransactionList() {
     },
   });
 
+  // --- Skeleton while loading ---
+  if (!isHydrated) {
+    return (
+      <Card className="bg-input/10 rounded-3xl overflow-hidden">
+        <CardHeader>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div className="h-7 w-48 bg-muted/50 rounded animate-pulse" />
+              <div className="h-4 w-56 bg-muted/30 rounded animate-pulse mt-2" />
+            </div>
+            <div className="h-10 w-[250px] bg-muted/30 rounded-xl animate-pulse" />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="rounded-2xl border overflow-hidden">
+            <div className="bg-input/20 px-6 py-4 flex gap-12">
+              {["w-24", "w-16", "w-16", "w-20"].map((w, i) => (
+                <div
+                  key={i}
+                  className={`h-4 ${w} bg-muted/40 rounded animate-pulse`}
+                />
+              ))}
+            </div>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div
+                key={i}
+                className="px-6 py-4 border-t border-input/20 flex items-center gap-12"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-8 w-8 bg-muted/30 rounded-lg animate-pulse" />
+                  <div className="space-y-1">
+                    <div className="h-4 w-28 bg-muted/40 rounded animate-pulse" />
+                    <div className="h-3 w-16 bg-muted/30 rounded animate-pulse" />
+                  </div>
+                </div>
+                <div className="h-4 w-20 bg-muted/30 rounded animate-pulse" />
+                <div className="h-6 w-16 bg-muted/30 rounded-full animate-pulse" />
+                <div className="h-5 w-20 bg-muted/40 rounded animate-pulse ml-auto" />
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <Card className="bg-card rounded-3xl overflow-hidden">
+    <Card className="bg-input/10 rounded-3xl overflow-hidden">
       <CardHeader>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
@@ -274,7 +320,7 @@ export function TransactionList() {
           <div className="space-y-4">
             <div className="rounded-2xl border  overflow-hidden">
               <Table>
-                <TableHeader className="bg-accent">
+                <TableHeader className="bg-input/20">
                   {table.getHeaderGroups().map((headerGroup) => (
                     <TableRow
                       key={headerGroup.id}
@@ -307,10 +353,13 @@ export function TransactionList() {
                       <TableRow
                         key={row.id}
                         data-state={row.getIsSelected() && "selected"}
-                        className="hover:bg-muted/30 transition-colors border-muted/20"
+                        className="hover:bg-input/20  transition-colors border-muted/20"
                       >
                         {row.getVisibleCells().map((cell) => (
-                          <TableCell key={cell.id} className="px-6 py-4">
+                          <TableCell
+                            key={cell.id}
+                            className="px-6 py-4 border-b border-input/20"
+                          >
                             {flexRender(
                               cell.column.columnDef.cell,
                               cell.getContext(),

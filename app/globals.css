@@ -48,13 +48,9 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
-html {
-  overflow-y: scroll !important;
-}
-
+/* Base body styles */
 body {
-  width: 100vw !important;
-  overflow-x: hidden !important;
+  @apply bg-background text-foreground antialiased min-h-screen;
 }
 
 /* Strictly prevent scroll-lock libraries from shifting ANY container */
@@ -77,7 +73,7 @@ header[style*="padding-right"],
   --card-foreground: oklch(0.25 0.02 245);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.25 0.02 245);
-  --primary: oklch(0.58 0.04 245); /* Soft Slate Blue */
+  --primary: oklch(24.816% 0.00189 286.046); /* Soft Slate Blue */
   --primary-foreground: oklch(0.985 0.001 240);
   --secondary: oklch(0.94 0.01 245); /* Muted Sage-ish/Grey */
   --secondary-foreground: oklch(0.25 0.02 245);
@@ -109,7 +105,7 @@ header[style*="padding-right"],
   --foreground: oklch(0.96 0.005 245);
   --card: oklch(0.26 0.015 245); /* Slightly lighter neutral for cards */
   --card-foreground: oklch(0.96 0.005 245);
-  --popover: oklch(0.26 0.015 245);
+  --popover: oklch(19.012% 0.0016 197.768);
   --popover-foreground: oklch(0.96 0.005 245);
   --primary: oklch(100% 0.00011 271.152); /* Adjusted Slate Blue for Dark */
   --primary-foreground: oklch(0.18 0.015 245);

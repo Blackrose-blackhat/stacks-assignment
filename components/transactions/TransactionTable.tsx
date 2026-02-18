@@ -305,9 +305,9 @@ export function TransactionTable() {
           </DropdownMenu>
         </div>
       </div>
-      <div className="rounded-3xl border border-muted/90 bg-card overflow-hidden shadow-sm">
+      <div className="rounded-3xl border border-input/10 bg-input/10 overflow-hidden shadow-sm">
         <Table>
-          <TableHeader className="bg-muted/50">
+          <TableHeader className="bg-input/10">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
                 key={headerGroup.id}

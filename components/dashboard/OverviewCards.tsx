@@ -47,7 +47,26 @@ function OverviewCard({
 }
 
 export function OverviewCards() {
-  const { transactions } = useTransactions();
+  const { transactions, isHydrated } = useTransactions();
+
+  if (!isHydrated) {
+    return (
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Card key={i} className="relative overflow-hidden">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <div className="h-4 w-24 bg-muted/50 rounded animate-pulse" />
+              <div className="h-9 w-9 bg-muted/50 rounded-xl animate-pulse" />
+            </CardHeader>
+            <CardContent>
+              <div className="h-7 w-28 bg-muted/50 rounded animate-pulse mb-2" />
+              <div className="h-3 w-20 bg-muted/30 rounded animate-pulse" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
 
   const totalIncome = transactions
     .filter((tx) => tx.type === "income")

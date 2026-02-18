@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import {
-  Scale,
+  DollarSign,
   Menu,
   Bell,
   Search,
@@ -14,6 +14,9 @@ import {
   Monitor,
   Palette,
   Plus,
+  ArrowRightLeft,
+  LayoutDashboard,
+  PieChart,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
@@ -45,24 +48,21 @@ import {
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { name: "Dashboard", href: "/" },
-  { name: "Transactions", href: "/transactions" },
-  { name: "Reports", href: "/reports" },
-  { name: "Settings", href: "/settings" },
+  { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Transactions", href: "/transactions", icon: ArrowRightLeft },
+  { name: "Reports", href: "/reports", icon: PieChart },
+  { name: "Settings", href: "/settings", icon: Settings },
 ];
 
 export function Navbar() {
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  if (!mounted) {
-    return null;
-  }
 
   const openAddTransaction = () => {
     const event = new KeyboardEvent("keydown", {
@@ -75,52 +75,13 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background ">
+    <header className="sticky top-0 z-50 w-full border-b bg-background">
       <div className="container mx-auto max-w-7xl flex h-16 items-center justify-between px-4">
         {/* Logo and Brand */}
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2 group">
             <div className="bg-primary/10 p-2 rounded-xl transition-all hover:bg-primary/15">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="text-primary"
-              >
-                <rect
-                  width="24"
-                  height="24"
-                  rx="6"
-                  fill="currentColor"
-                  fillOpacity="0.1"
-                />
-                <rect
-                  x="5"
-                  y="7"
-                  width="14"
-                  height="1.5"
-                  rx="0.75"
-                  fill="currentColor"
-                />
-                <rect
-                  x="5"
-                  y="11.5"
-                  width="10"
-                  height="2.5"
-                  rx="1.25"
-                  fill="currentColor"
-                />
-                <rect
-                  x="7"
-                  y="17"
-                  width="12"
-                  height="1.5"
-                  rx="0.75"
-                  fill="currentColor"
-                />
-              </svg>
+              <DollarSign className="h-6 w-6 text-primary" />
             </div>
             <span className="hidden font-medium sm:inline-block text-xl tracking-tight text-foreground/90 lowercase">
               equifi
@@ -134,18 +95,18 @@ export function Navbar() {
             <NavigationMenuList className="gap-2">
               {navItems.map((item) => (
                 <NavigationMenuItem key={item.name}>
-                  <Link href={item.href} passHref legacyBehavior>
-                    <NavigationMenuLink
-                      className={cn(
-                        "px-3 py-1.5 text-sm transition-all hover:bg-transparent focus:bg-transparent data-[active=true]:bg-transparent data-[active=true]:hover:bg-transparent data-[active=true]:focus:bg-transparent",
-                        pathname === item.href
-                          ? "text-primary font-semibold"
-                          : "text-muted-foreground hover:text-foreground",
-                      )}
-                    >
-                      {item.name}
-                    </NavigationMenuLink>
-                  </Link>
+                  <NavigationMenuLink
+                    asChild
+                    active={pathname === item.href}
+                    className={cn(
+                      "px-3 py-1.5 text-sm transition-all hover:bg-transparent focus:bg-transparent data-[active=true]:bg-transparent data-[active=true]:hover:bg-transparent data-[active=true]:focus:bg-transparent",
+                      pathname === item.href
+                        ? "text-primary font-semibold"
+                        : "text-muted-foreground hover:text-foreground",
+                    )}
+                  >
+                    <Link href={item.href}>{item.name}</Link>
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>
@@ -223,13 +184,13 @@ export function Navbar() {
                   <Palette className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm">Theme</span>
                 </div>
-                <div className="flex items-center gap-0.5 bg-muted p-1 rounded-full border border-border">
+                <div className="flex items-center gap-0.5 bg-input/20 p-1 rounded-full border border-border">
                   <Button
                     variant="ghost"
                     size="icon"
                     className={cn(
                       "h-7 w-7 rounded-full cursor-pointer p-0 transition-all duration-200",
-                      theme === "light"
+                      mounted && theme === "light"
                         ? "bg-background text-foreground shadow-sm"
                         : "text-muted-foreground hover:text-foreground",
                     )}
@@ -242,7 +203,7 @@ export function Navbar() {
                     size="icon"
                     className={cn(
                       "h-7 w-7 rounded-full cursor-pointer p-0 transition-all duration-200",
-                      theme === "dark"
+                      mounted && theme === "dark"
                         ? "bg-background text-foreground shadow-sm"
                         : "text-muted-foreground hover:text-foreground",
                     )}
@@ -255,7 +216,7 @@ export function Navbar() {
                     size="icon"
                     className={cn(
                       "h-7 w-7 rounded-full cursor-pointer p-0 transition-all duration-200",
-                      theme === "system"
+                      mounted && theme === "system"
                         ? "bg-background text-foreground shadow-sm"
                         : "text-muted-foreground hover:text-foreground",
                     )}
@@ -275,7 +236,7 @@ export function Navbar() {
 
           {/* Mobile Menu Trigger */}
           <div className="md:hidden">
-            <Sheet>
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
                 <Button
                   variant="ghost"
@@ -288,46 +249,7 @@ export function Navbar() {
               <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                 <SheetHeader>
                   <SheetTitle className="text-left flex items-center gap-2">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="text-primary"
-                    >
-                      <rect
-                        width="24"
-                        height="24"
-                        rx="6"
-                        fill="currentColor"
-                        fillOpacity="0.1"
-                      />
-                      <rect
-                        x="5"
-                        y="7"
-                        width="14"
-                        height="1.5"
-                        rx="0.75"
-                        fill="currentColor"
-                      />
-                      <rect
-                        x="5"
-                        y="11.5"
-                        width="10"
-                        height="2.5"
-                        rx="1.25"
-                        fill="currentColor"
-                      />
-                      <rect
-                        x="7"
-                        y="17"
-                        width="12"
-                        height="1.5"
-                        rx="0.75"
-                        fill="currentColor"
-                      />
-                    </svg>
+                    <DollarSign className="h-5 w-5 text-primary" />
                     <span className="lowercase font-medium tracking-tight">
                       equifi
                     </span>
@@ -341,13 +263,15 @@ export function Navbar() {
                     <Link
                       key={item.name}
                       href={item.href}
+                      onClick={() => setIsOpen(false)}
                       className={cn(
-                        "text-lg transition-colors px-4 py-2 hover:bg-transparent",
+                        "flex items-center gap-2 text-lg transition-colors px-4 py-2 hover:bg-transparent",
                         pathname === item.href
                           ? "text-primary font-semibold"
                           : "text-muted-foreground hover:text-foreground",
                       )}
                     >
+                      <item.icon className="h-5 w-5" />
                       {item.name}
                     </Link>
                   ))}

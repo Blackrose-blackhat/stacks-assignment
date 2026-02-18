@@ -57,7 +57,7 @@ export function AddTransactionDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full max-w-[calc(100%-2rem)] sm:max-w-[425px] bg-background rounded-3xl border-muted/20 p-6">
+      <DialogContent className="w-full max-w-[calc(100%-2rem)] sm:max-w-[425px] bg-background rounded-3xl border-input/30 p-6">
         <DialogHeader className="mb-4 text-left">
           <DialogTitle className="text-2xl font-semibold tracking-tight">
             Add Transaction
@@ -67,14 +67,14 @@ export function AddTransactionDialog({
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="flex p-1 bg-muted/50 rounded-2xl mb-2">
+          <div className="flex p-1 bg-input/20 rounded-2xl mb-2">
             <button
               type="button"
               onClick={() => setFormData({ ...formData, type: "expense" })}
               className={cn(
                 "flex-1 py-2 text-sm font-medium rounded-xl transition-all duration-200",
                 formData.type === "expense"
-                  ? "bg-background text-foreground shadow-sm"
+                  ? "bg-input/20 text-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground",
               )}
             >
@@ -86,7 +86,7 @@ export function AddTransactionDialog({
               className={cn(
                 "flex-1 py-2 text-sm font-medium rounded-xl transition-all duration-200",
                 formData.type === "income"
-                  ? "bg-background text-foreground shadow-sm"
+                  ? "bg-input/20 text-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground",
               )}
             >
@@ -107,7 +107,7 @@ export function AddTransactionDialog({
                 onChange={(e) =>
                   setFormData({ ...formData, merchant: e.target.value })
                 }
-                className="h-11 rounded-xl bg-muted/30 border-muted/20 focus:bg-background transition-all"
+                className="h-11 rounded-xl bg-input/20 border-muted/20 focus:bg-input/20 transition-all"
                 required
               />
             </div>

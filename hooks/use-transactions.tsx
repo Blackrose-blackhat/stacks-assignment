@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import {
   Transaction,
   getStoredTransactions,
@@ -11,6 +11,7 @@ interface TransactionContextType {
   transactions: Transaction[];
   addTransaction: (transaction: Omit<Transaction, "id" | "date">) => void;
   deleteTransaction: (id: string) => void;
+  isHydrated: boolean;
 }
 
 const TransactionContext = createContext<TransactionContextType | undefined>(
@@ -22,9 +23,13 @@ export function TransactionProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [transactions, setTransactions] = useState<Transaction[]>(() =>
-    getStoredTransactions(),
-  );
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setTransactions(getStoredTransactions());
+    setIsHydrated(true);
+  }, []);
 
   const addTransaction = (newTx: Omit<Transaction, "id" | "date">) => {
     const transaction: Transaction = {
@@ -45,7 +50,7 @@ export function TransactionProvider({
 
   return (
     <TransactionContext.Provider
-      value={{ transactions, addTransaction, deleteTransaction }}
+      value={{ transactions, addTransaction, deleteTransaction, isHydrated }}
     >
       {children}
     </TransactionContext.Provider>

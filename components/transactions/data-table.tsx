@@ -176,13 +176,13 @@ export function DataTable<TData, TValue>({
       </div>
 
       {/* Table Container */}
-      <div className="rounded-3xl border border-muted bg-card overflow-hidden shadow-sm">
+      <div className="rounded-3xl border border-input/20 bg-input/10 overflow-hidden shadow-sm">
         <Table>
-          <TableHeader className="bg-muted/50">
+          <TableHeader className="bg-input/20">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
                 key={headerGroup.id}
-                className="hover:bg-transparent border-muted/30"
+                className="hover:bg-input/20 border-muted/30"
               >
                 {headerGroup.headers.map((header) => {
                   return (
@@ -205,7 +205,7 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="hover:bg-muted/30 transition-colors border-muted/20"
+                  className="hover:bg-input/20 transition-colors border-muted/20"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="px-6 py-4">
