@@ -75,7 +75,7 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full mx-auto border-b bg-background ">
+    <header className="sticky top-0 z-50 w-full border-b bg-background ">
       <div className="container mx-auto max-w-7xl flex h-16 items-center justify-between px-4">
         {/* Logo and Brand */}
         <div className="flex items-center gap-2">
@@ -134,9 +134,8 @@ export function Navbar() {
             <NavigationMenuList className="gap-2">
               {navItems.map((item) => (
                 <NavigationMenuItem key={item.name}>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      href={item.href}
+                  <Link href={item.href} passHref legacyBehavior>
+                    <NavigationMenuLink
                       className={cn(
                         "px-3 py-1.5 text-sm transition-all hover:bg-transparent focus:bg-transparent data-[active=true]:bg-transparent data-[active=true]:hover:bg-transparent data-[active=true]:focus:bg-transparent",
                         pathname === item.href
@@ -145,8 +144,8 @@ export function Navbar() {
                       )}
                     >
                       {item.name}
-                    </Link>
-                  </NavigationMenuLink>
+                    </NavigationMenuLink>
+                  </Link>
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>

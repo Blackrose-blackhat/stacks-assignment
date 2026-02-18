@@ -133,106 +133,108 @@ export function CategoryBreakdown() {
       </CardHeader>
       <CardContent className="flex-grow flex flex-col justify-between pt-0">
         <div className="relative w-full aspect-square max-w-[280px] mx-auto mb-6">
-          <ChartContainer config={chartConfig} className="w-full h-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  {...({
-                    data: categoryData,
-                    cx: "50%",
-                    cy: "50%",
-                    innerRadius: "75%",
-                    outerRadius: "95%",
-                    paddingAngle: 5,
-                    dataKey: "value",
-                    nameKey: "name",
-                    activeIndex: activeIndex,
-                  } as any)}
-                  activeShape={(props: any) => {
-                    const {
-                      cx,
-                      cy,
-                      innerRadius,
-                      outerRadius,
-                      startAngle,
-                      endAngle,
-                      fill,
-                    } = props;
-                    return (
-                      <Sector
-                        cx={cx}
-                        cy={cy}
-                        innerRadius={innerRadius}
-                        outerRadius={outerRadius + 8}
-                        startAngle={startAngle}
-                        endAngle={endAngle}
-                        fill={fill}
-                        stroke={fill}
-                        strokeWidth={2}
-                        style={{
-                          filter: "drop-shadow(0 0 10px rgba(0,0,0,0.1))",
-                          transition:
-                            "all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)",
-                        }}
+          <div className="w-full h-full min-h-[280px]">
+            <ChartContainer config={chartConfig} className="w-full h-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    {...({
+                      data: categoryData,
+                      cx: "50%",
+                      cy: "50%",
+                      innerRadius: "75%",
+                      outerRadius: "95%",
+                      paddingAngle: 5,
+                      dataKey: "value",
+                      nameKey: "name",
+                      activeIndex: activeIndex,
+                    } as any)}
+                    activeShape={(props: any) => {
+                      const {
+                        cx,
+                        cy,
+                        innerRadius,
+                        outerRadius,
+                        startAngle,
+                        endAngle,
+                        fill,
+                      } = props;
+                      return (
+                        <Sector
+                          cx={cx}
+                          cy={cy}
+                          innerRadius={innerRadius}
+                          outerRadius={outerRadius + 8}
+                          startAngle={startAngle}
+                          endAngle={endAngle}
+                          fill={fill}
+                          stroke={fill}
+                          strokeWidth={2}
+                          style={{
+                            filter: "drop-shadow(0 0 10px rgba(0,0,0,0.1))",
+                            transition:
+                              "all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                          }}
+                        />
+                      );
+                    }}
+                    animationBegin={0}
+                    animationDuration={1200}
+                    isAnimationActive={true}
+                  >
+                    {categoryData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={entry.color}
+                        stroke="none"
+                        className="transition-all duration-300 hover:opacity-80 cursor-pointer"
                       />
-                    );
-                  }}
-                  animationBegin={0}
-                  animationDuration={1200}
-                  isAnimationActive={true}
-                >
-                  {categoryData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={entry.color}
-                      stroke="none"
-                      className="transition-all duration-300 hover:opacity-80 cursor-pointer"
-                    />
-                  ))}
-                  {showLabel && (
-                    <Label
-                      position="center"
-                      content={({ viewBox }) => {
-                        if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                          return (
-                            <g className="fade-in-label">
-                              <text
-                                x={viewBox.cx}
-                                y={viewBox.cy}
-                                textAnchor="middle"
-                                dominantBaseline="middle"
-                              >
+                    ))}
+                    {showLabel && (
+                      <Label
+                        position="center"
+                        content={({ viewBox }) => {
+                          if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                            return (
+                              <g className="fade-in-label">
                                 <text
                                   x={viewBox.cx}
                                   y={viewBox.cy}
-                                  className="fill-foreground text-3xl font-bold"
                                   textAnchor="middle"
+                                  dominantBaseline="middle"
                                 >
-                                  {maxPercentage}%
+                                  <text
+                                    x={viewBox.cx}
+                                    y={viewBox.cy}
+                                    className="fill-foreground text-3xl font-bold"
+                                    textAnchor="middle"
+                                  >
+                                    {maxPercentage}%
+                                  </text>
+                                  <text
+                                    x={viewBox.cx}
+                                    y={(viewBox.cy || 0) + 24}
+                                    className="fill-muted-foreground text-[10px]"
+                                    textAnchor="middle"
+                                  >
+                                    {maxCategory.name}
+                                  </text>
                                 </text>
-                                <text
-                                  x={viewBox.cx}
-                                  y={(viewBox.cy || 0) + 24}
-                                  className="fill-muted-foreground text-[10px]"
-                                  textAnchor="middle"
-                                >
-                                  {maxCategory.name}
-                                </text>
-                              </text>
-                            </g>
-                          );
-                        }
-                      }}
-                    />
-                  )}
-                </Pie>
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent hideLabel />}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </ChartContainer>
+                              </g>
+                            );
+                          }
+                        }}
+                      />
+                    )}
+                  </Pie>
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent hideLabel />}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+          </div>
         </div>
 
         <div className="space-y-4 pt-4 border-t border-muted/20">

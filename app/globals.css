@@ -49,7 +49,24 @@
 }
 
 html {
-  overflow-y: scroll;
+  overflow-y: scroll !important;
+}
+
+body {
+  width: 100vw !important;
+  overflow-x: hidden !important;
+}
+
+/* Strictly prevent scroll-lock libraries from shifting ANY container */
+body[data-scroll-locked],
+body[data-radix-scroll-lock],
+body[style*="margin-right"],
+body[style*="padding-right"],
+header[style*="margin-right"],
+header[style*="padding-right"],
+[data-scroll-locked] {
+  margin-right: 0 !important;
+  padding-right: 0 !important;
 }
 
 :root {
