@@ -149,13 +149,13 @@ export function Navbar() {
                 variant="ghost"
                 className="relative h-10 w-10 rounded-full border border-border p-0 overflow-hidden transition-all duration-200 hover:bg-transparent"
               >
-                <Avatar className="h-10 w-10">
+                <Avatar className="h-10 w-10 border border-border/50">
                   <AvatarImage
-                    src="https://github.com/shadcn.png"
-                    alt="@shadcn"
+                    src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=1000"
+                    alt="User"
                   />
-                  <AvatarFallback className="bg-primary/5 text-primary">
-                    SC
+                  <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                    JD
                   </AvatarFallback>
                 </Avatar>
               </Button>
